@@ -21,6 +21,25 @@ function MySprite(img_url) {
   this.flipV = false;
   this.flipH = false;
 }
+
+function resizeCanvas() {
+  const canvas = document.getElementById('myCanvas');
+  const containerWidth = window.innerWidth;
+  const containerHeight = window.innerHeight;
+  const canvasAspectRatio = canvas.width / canvas.height;
+  const containerAspectRatio = containerWidth / containerHeight;
+
+  if (canvasAspectRatio > containerAspectRatio) {
+    // Adjust the canvas height to fill the container height
+    canvas.style.height = containerHeight + 'px';
+    canvas.style.width = (containerHeight * canvasAspectRatio) + 'px';
+  } else {
+    // Adjust the canvas width to fill the container width
+    canvas.style.width = containerWidth + 'px';
+    canvas.style.height = (containerWidth / canvasAspectRatio) + 'px';
+  }
+}
+
 MySprite.prototype.Do_Frame_Things = function () {
   ctx.save();
   ctx.translate(this.x + this.MyImg.width / 2, this.y + this.MyImg.height / 2);
@@ -116,7 +135,7 @@ function check_for_end_game() {
 }
 function display_intro_instructions() {
   ctx.font = '25px Arial';
-  ctx.fillStyle = 'red';
+  ctx.fillStyle = 'white';
   ctx.textAlign = 'center';
   ctx.fillText(
     'Press, touch or click to start',
@@ -129,7 +148,7 @@ function display_game_over() {
   for (var i = 0; i < pipes.length; i++)
     if (pipes[i].x < bird.x) score = score + 0.5;
   ctx.font = '30px Arial';
-  ctx.fillStyle = 'red';
+  ctx.fillStyle = 'white';
   ctx.textAlign = 'center';
   ctx.fillText('Game Over', myCanvas.width / 2, 100);
   ctx.fillText('Score: ' + score, myCanvas.width / 2, 150);
@@ -188,6 +207,15 @@ function Do_a_Frame() {
       make_bird_tilt_appropriately();
       make_bird_slow_and_fall();
       check_for_end_game();
+    
+      var score = 0;
+      for (var i = 0; i < pipes.length; i++)
+        if (pipes[i].x < bird.x) score = score + 0.5;
+    
+      ctx.font = '30px Arial';
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'left';
+      ctx.fillText('Score: ' + score, 10, 30);
       break;
     }
     case 'over': {
